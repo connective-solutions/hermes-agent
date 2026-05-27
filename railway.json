@@ -3,5 +3,8 @@
   "build": {
     "builder": "DOCKERFILE",
     "dockerfilePath": "Dockerfile"
+  },
+  "deploy": {
+    "startCommand": "/bin/sh -lc 'chown -R hermes:hermes /opt/data 2>/dev/null || true; exec su hermes -s /bin/sh -c \"cd /opt/data; /opt/hermes/.venv/bin/hermes dashboard --host ${HERMES_DASHBOARD_HOST:-0.0.0.0} --port ${HERMES_DASHBOARD_PORT:-9119} --insecure --skip-build --no-open & exec /opt/hermes/.venv/bin/hermes gateway run --replace --accept-hooks\"'"
   }
 }
