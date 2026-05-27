@@ -70,6 +70,7 @@ RUN set -eu; \
 # Non-root user for runtime; UID can be overridden via HERMES_UID at runtime
 RUN useradd -u 10000 -m -d /opt/data hermes
 RUN ln -sf /opt/hermes/.venv/bin/hermes /usr/local/bin/hermes
+RUN ln -sf /usr/bin/tmux /usr/local/bin/tmux
 
 COPY --chmod=0755 --from=uv_source /usr/local/bin/uv /usr/local/bin/uvx /usr/local/bin/
 
