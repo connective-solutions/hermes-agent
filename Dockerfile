@@ -150,8 +150,7 @@ RUN cd web && npm run build && \
 # Without this, `uv pip install` fails with EACCES and adapters silently
 # fail to load.  See tools/lazy_deps.py.
 USER root
-RUN chown -R hermes:hermes /opt/hermes/.venv /opt/hermes/ui-tui && \
-    chmod -R u+rwX,go+rX /opt/hermes/.venv /opt/hermes/ui-tui
+ENV PYTHONDONTWRITEBYTECODE=1
 # Start as root so the s6-overlay stage2 hook can usermod/groupmod and chown
 # the data volume. Each supervised service then drops to the hermes user via
 # `s6-setuidgid hermes` in its run script. If HERMES_UID is unset, services
