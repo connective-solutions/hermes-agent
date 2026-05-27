@@ -196,7 +196,11 @@ ENV HERMES_HOME=/opt/data
 # subprocess that doesn't activate the venv first still find hermes.
 ENV PATH="/opt/hermes/.venv/bin:/opt/data/.local/bin:${PATH}"
 RUN mkdir -p /opt/data
-VOLUME [ "/opt/data" ]
+
+EXPOSE 8642 9119
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD curl -fsS "http://127.0.0.1:${API_SERVER_PORT:-8642}/health" >/dev/null && \
+        curl -fsS "http://127.0.0.1:${HERMES_DASHBOARD_PORT:-9119}/api/status" >/dev/null || exit 1
 
 # s6-overlay's /init is PID 1. It sets up the supervision tree, runs
 # /etc/cont-init.d/* (our stage2 hook), starts s6-rc services
@@ -221,4 +225,4 @@ VOLUME [ "/opt/data" ]
 # exit code. Without the wrapper-as-ENTRYPOINT, leading-dash args
 # like `--version` would be intercepted by /init's POSIX shell.
 ENTRYPOINT [ "/init", "/opt/hermes/docker/main-wrapper.sh" ]
-CMD [ ]
+CMD [ "gateway", "run" ]
